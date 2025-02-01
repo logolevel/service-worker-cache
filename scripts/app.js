@@ -1,5 +1,5 @@
 const btn = document.createElement('button');
-btn.textContent = 'Clear cache: in set up v1.2';
+btn.textContent = 'Clear cache: set up v1.3';
 app.append(btn);
 
 btn.addEventListener('click', function (e) {
@@ -9,6 +9,18 @@ btn.addEventListener('click', function (e) {
             caches.delete(name);
         }
     });
+
+    // Unregister Service Worker
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(registrations => {
+            registrations.forEach(registration => registration.unregister());
+        });
+    }
+
+    // Reload the page
+    setTimeout(() => {
+        window.location.reload(true);
+    }, 1000);
 });
 
 // Register Service Worker
