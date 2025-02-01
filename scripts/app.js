@@ -1,18 +1,19 @@
-console.log('hello app.js');
-
 const btn = document.createElement('button');
-btn.textContent = 'show log v1.6';
+btn.textContent = 'static-app-v1';
 app.append(btn);
 
-btn.addEventListener('click', function(e) {
+btn.addEventListener('click', function (e) {
     console.log('e', e);
 });
 
-
+// Register Service Worker
 if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('./service-worker.js')
-        .then(reg => console.log("Service Worker Registered", reg))
-        .catch(err => console.error("Service Worker Registration Failed", err));
+    try {
+        const reg = await navigator.serviceWorker.register('./service-worker.js');
+        console.log('Service worker register success', reg);
+    } catch (e) {
+        console.error('Service worker register fail');
+    }
 }
 
 // Detect Network Status
