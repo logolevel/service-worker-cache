@@ -1,9 +1,14 @@
 const btn = document.createElement('button');
-btn.textContent = 'static-app-v1';
+btn.textContent = 'Clear cache: in set up v1.2';
 app.append(btn);
 
 btn.addEventListener('click', function (e) {
-    console.log('e', e);
+    caches.keys().then(function(names) {
+        for (let name of names) {
+            console.log('Removed: ', name, ' of ', names);
+            caches.delete(name);
+        }
+    });
 });
 
 // Register Service Worker
