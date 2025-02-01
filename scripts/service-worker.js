@@ -1,8 +1,8 @@
-const CACHE_NAME = 'cache-v1';
+const CACHE_NAME = 'cache-v1.1';
 const STATIC_ASSETS = [
-    '/',
-    '/index.html',
-    '/scripts/app.js',
+    '../',
+    '../index.html',
+    './app.js',
 ];
 
 // Install Event: Cache Files
