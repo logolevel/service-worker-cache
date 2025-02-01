@@ -1,52 +1,52 @@
-const CACHE_NAME = 'cache-v1.6';
-const STATIC_ASSETS = [
-    './',
+const staticCacheName = 'static-app-v1';
+const dynamicCacheName = 'dynamic-app-v1';
+
+const assetUrls = [
     './index.html',
     './scripts/app.js',
-];
+    './offline.html'
+]
 
-// Install Event: Cache Files
-self.addEventListener('install', event => {
-    event.waitUntil(
-        caches.open(CACHE_NAME).then(cache => {
-            console.log("Caching files...");
-            return cache.addAll(STATIC_ASSETS);
-        })
-    );
-});
+self.addEventListener('install', async event => {
+    const cache = await caches.open(staticCacheName)
+    await cache.addAll(assetUrls)
+})
 
-// Fetch event: Serve cached files when offline
-self.addEventListener("fetch", (event) => {
-    event.respondWith(
-        caches.match(event.request).then((cachedResponse) => {
-            return cachedResponse || fetch(event.request).then((networkResponse) => {
-                return caches.open(CACHE_NAME).then((cache) => {
-                    cache.put(event.request, networkResponse.clone()); // Cache new response
-                    return networkResponse;
-                });
-            });
-        }).catch(() => {
-            // Fallback to index.html for navigation requests (SPA support)
-            if (event.request.mode === "navigate") {
-                return caches.match("/index.html");
-            }
-        })
-    );
-});
+self.addEventListener('activate', async event => {
+    const cacheNames = await caches.keys()
+    await Promise.all(
+        cacheNames
+            .filter(name => name !== staticCacheName)
+            .filter(name => name !== dynamicCacheName)
+            .map(name => caches.delete(name))
+    )
+})
 
-// Activate Event: Clean Old Caches
-self.addEventListener('activate', event => {
-    event.waitUntil(
-        caches.keys().then(keys => {
-            return Promise.all(
-                keys.map(key => {
-                    if (key !== CACHE_NAME) {
-                        console.log(`Deleting old cache: ${key}`);
-                        return caches.delete(key);
-                    }
-                })
-            );
-        }).then(() => self.clients.claim()) // Claim clients to activate immediately
-    );
-});
+self.addEventListener('fetch', event => {
+    const { request } = event
 
+    const url = new URL(request.url)
+    if (url.origin === location.origin) {
+        event.respondWith(cacheFirst(request))
+    } else {
+        event.respondWith(networkFirst(request))
+    }
+})
+
+
+async function cacheFirst(request) {
+    const cached = await caches.match(request)
+    return cached ?? await fetch(request)
+}
+
+async function networkFirst(request) {
+    const cache = await caches.open(dynamicCacheName)
+    try {
+        const response = await fetch(request)
+        await cache.put(request, response.clone())
+        return response
+    } catch (e) {
+        const cached = await cache.match(request)
+        return cached ?? await caches.match('/offline.html')
+    }
+}
