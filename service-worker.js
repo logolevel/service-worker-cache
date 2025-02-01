@@ -1,4 +1,4 @@
-const staticCacheName = 'static-app-v1';
+const staticCacheName = 'static-app-v1.1';
 const dynamicCacheName = 'dynamic-app-v1';
 
 const assetUrls = [
