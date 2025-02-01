@@ -1,8 +1,8 @@
-const CACHE_NAME = 'cache-v1.1';
+const CACHE_NAME = 'cache-v1.3';
 const STATIC_ASSETS = [
-    '../',
-    '../index.html',
-    './app.js',
+    '/',
+    '/index.html',
+    '/scripts/app.js',
 ];
 
 // Install Event: Cache Files
@@ -15,11 +15,21 @@ self.addEventListener('install', event => {
     );
 });
 
-// Fetch Event: Serve Cached Files when Offline
-self.addEventListener('fetch', event => {
+// Fetch event: Serve cached files when offline
+self.addEventListener("fetch", (event) => {
     event.respondWith(
-        caches.match(event.request).then(response => {
-            return response || fetch(event.request).catch(() => caches.match('/index.html'));
+        caches.match(event.request).then((cachedResponse) => {
+            return cachedResponse || fetch(event.request).then((networkResponse) => {
+                return caches.open(CACHE_NAME).then((cache) => {
+                    cache.put(event.request, networkResponse.clone()); // Cache new response
+                    return networkResponse;
+                });
+            });
+        }).catch(() => {
+            // Fallback to index.html for navigation requests (SPA support)
+            if (event.request.mode === "navigate") {
+                return caches.match("/index.html");
+            }
         })
     );
 });
