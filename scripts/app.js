@@ -1,7 +1,7 @@
 console.log('hello app.js');
 
 const btn = document.createElement('button');
-btn.textContent = 'show log';
+btn.textContent = 'show log v1.5';
 app.append(btn);
 
 btn.addEventListener('click', function(e) {
