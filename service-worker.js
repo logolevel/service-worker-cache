@@ -1,5 +1,7 @@
-const staticCacheName = 'static-app-v1.4';
-const dynamicCacheName = 'dynamic-app-v1.4';
+const version = 'v1.5'
+
+const staticCacheName = `static-${version}`;
+const dynamicCacheName = `dynamic-${version}`;
 
 const assetUrls = [
     './index.html',

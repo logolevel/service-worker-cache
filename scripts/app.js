@@ -1,5 +1,5 @@
 const btn = document.createElement('button');
-btn.textContent = 'Clear cache: set up v1.4';
+btn.textContent = 'Clear cache: set up v1.5';
 app.append(btn);
 
 btn.addEventListener('click', function (e) {

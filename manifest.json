@@ -36,7 +36,14 @@
           "type": "image/png",
           "form_factor": "narrow",
           "label": "Wonder Widgets"
-        } 
+        },
+        {
+          "src": "./screenshots/screen-app.png",
+          "sizes": "2154x1576",
+          "type": "image/png",
+          "form_factor": "wide",
+          "label": "Wonder Widgets Wide"
+        }
     ],
     "description": "Description example. Description example. Description example..."
 }
