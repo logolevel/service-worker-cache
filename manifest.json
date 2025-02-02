@@ -38,7 +38,7 @@
           "label": "Wonder Widgets"
         },
         {
-          "src": "./screenshots/screen-app.png",
+          "src": "./screenshots/screen-app-wide.png",
           "sizes": "2154x1576",
           "type": "image/png",
           "form_factor": "wide",
